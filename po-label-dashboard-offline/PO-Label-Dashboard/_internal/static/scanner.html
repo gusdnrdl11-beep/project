@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PO 라벨 출력 테스트</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#f8fafc;color:#0f172a;font:16px/1.5 Arial,sans-serif}
+    main{max-width:560px;margin:8vh auto;padding:24px}.card{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:24px;box-shadow:0 1px 3px rgba(15,23,42,.06)}
+    h1{margin:0 0 6px;font-size:24px}p{margin:0 0 20px;color:#64748b}label{display:block;margin:14px 0 6px;font-weight:700}
+    input{width:100%;height:44px;border:1px solid #cbd5e1;border-radius:4px;padding:0 12px;font-size:18px}input:focus{outline:2px solid #0077c8;border-color:#0077c8}
+    button,a{height:42px;border-radius:4px;padding:0 16px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;text-decoration:none}
+    button{border:1px solid #0066aa;background:#0077c8;color:#fff;cursor:pointer}a{border:1px solid #cbd5e1;color:#0f172a;background:#fff}.actions{display:flex;gap:8px;margin-top:20px}
+    #status{margin-top:16px;padding:12px;border-radius:4px;background:#eff6ff;color:#075985;display:none}.error{background:#fef2f2!important;color:#b91c1c!important}
+  </style>
+</head>
+<body><main><section class="card"><h1>PO 라벨 출력 테스트</h1><p>바코드 스캐너로 PO를 입력하거나 직접 입력하세요.</p>
+  <form id="label-form"><label for="po">PO 바코드</label><input id="po" name="po" value="12345678" autocomplete="off" autofocus required>
+  <label for="quantity">출력 수량 (EA)</label><input id="quantity" name="quantity" type="number" value="100" min="1" max="1000000" required>
+  <div class="actions"><button type="submit">라벨 발행·인쇄</button><a href="/">대시보드 보기</a><a href="/po-sheets">PO 작업지</a></div></form><div id="status" role="status"></div>
+  </section></main>
+  <script>
+    const form=document.getElementById('label-form'),statusBox=document.getElementById('status');
+    form.addEventListener('submit',async(e)=>{e.preventDefault();statusBox.style.display='block';statusBox.className='';statusBox.textContent='라벨을 생성하는 중입니다…';
+      try{const response=await fetch('/api/labels',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({po:form.po.value.trim(),quantity:Number(form.quantity.value)})});
+        const data=await response.json();if(!response.ok)throw new Error(data.detail||'라벨 발행에 실패했습니다.');
+        statusBox.textContent=`PO ${data.po}: ${data.quantity.toLocaleString()} EA가 출력 기록에 저장되었습니다. 대시보드에는 다음 자동 갱신 또는 수동 업데이트 때 반영됩니다.`;
+        window.open(data.print_url,'_blank','noopener');form.po.select();
+      }catch(error){statusBox.className='error';statusBox.textContent=error.message;}}
+    );
+  </script>
+</body></html>

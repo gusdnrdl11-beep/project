@@ -1,0 +1,404 @@
+<!DOCTYPE html><html lang="ko" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>사출생산 대시보드</title>
+<link href="/static/vendor/fonts/app-fonts.css" rel="stylesheet">
+<link href="/static/vendor/fonts/material-symbols.css" rel="stylesheet">
+<script src="/static/vendor/tailwindcss.js"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "tertiary-fixed": "#ffdcc3",
+            "outline-variant": "#c0c7d3",
+            "tertiary-container": "#b05f00",
+            "primary-fixed-dim": "#9fcaff",
+            "on-primary": "#ffffff",
+            "surface-tint": "#0061a5",
+            "on-error": "#ffffff",
+            "background": "#f8f9ff",
+            "on-tertiary-container": "#fffbfa",
+            "error": "#ba1a1a",
+            "primary-container": "#0077c8",
+            "primary": "#005e9f",
+            "secondary-container": "#82f5c1",
+            "on-secondary-fixed": "#002114",
+            "on-surface-variant": "#404751",
+            "tertiary": "#8c4a00",
+            "tertiary-fixed-dim": "#ffb77d",
+            "secondary-fixed-dim": "#68dba9",
+            "on-tertiary-fixed-variant": "#6e3900",
+            "on-secondary-container": "#00714e",
+            "inverse-surface": "#213145",
+            "outline": "#717783",
+            "on-tertiary": "#ffffff",
+            "secondary": "#006c4a",
+            "surface": "#f8f9ff",
+            "inverse-primary": "#9fcaff",
+            "on-primary-fixed-variant": "#00497e",
+            "surface-container-highest": "#d3e4fe",
+            "surface-bright": "#f8f9ff",
+            "on-secondary": "#ffffff",
+            "on-primary-container": "#fbfbff",
+            "error-container": "#ffdad6",
+            "surface-dim": "#cbdbf5",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#dce9ff",
+            "primary-fixed": "#d2e4ff",
+            "on-surface": "#0b1c30",
+            "surface-container-low": "#eff4ff",
+            "on-tertiary-fixed": "#2f1500",
+            "surface-container": "#e5eeff",
+            "surface-variant": "#d3e4fe",
+            "on-error-container": "#93000a",
+            "on-secondary-fixed-variant": "#005137",
+            "inverse-on-surface": "#eaf1ff",
+            "on-background": "#0b1c30",
+            "on-primary-fixed": "#001d36",
+            "secondary-fixed": "#85f8c4"
+          },
+          borderRadius: {
+            DEFAULT: "0.125rem",
+            lg: "0.25rem",
+            xl: "0.5rem",
+            full: "0.75rem"
+          },
+          spacing: {
+            "margin-desktop": "1.5rem",
+            "space-xl": "1.5rem",
+            "space-xs": "0.25rem",
+            "gutter-desktop": "1.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "0.75rem",
+            "gutter": "1rem",
+            "space-lg": "1rem",
+            "margin": "1rem"
+          },
+          fontFamily: {
+            "headline-md": ["Space Grotesk", "sans-serif"],
+            "body-md": ["Geist", "sans-serif"],
+            "label-mono": ["JetBrains Mono", "monospace"],
+            "body-sm": ["Geist", "sans-serif"],
+            "metric-display": ["JetBrains Mono", "monospace"],
+            "headline-lg": ["Space Grotesk", "sans-serif"],
+            "title-sm": ["Geist", "sans-serif"],
+            "label-mono-xs": ["JetBrains Mono", "monospace"],
+            "headline-xl-mobile": ["Space Grotesk", "sans-serif"],
+            "metric-display-mobile": ["JetBrains Mono", "monospace"],
+            "headline-xl": ["Space Grotesk", "sans-serif"]
+          },
+          fontSize: {
+            "headline-md": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+            "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+            "label-mono": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500" }],
+            "body-sm": ["12px", { lineHeight: "16px", fontWeight: "400" }],
+            "metric-display": ["32px", { lineHeight: "36px", letterSpacing: "-0.03em", fontWeight: "700" }],
+            "headline-lg": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
+            "title-sm": ["16px", { lineHeight: "24px", fontWeight: "600" }],
+            "label-mono-xs": ["10px", { lineHeight: "12px", letterSpacing: "0.04em", fontWeight: "500" }],
+            "headline-xl": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "600" }]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body class="bg-[#f8fafc] font-body-md text-slate-800 antialiased selection:bg-sky-100 selection:text-sky-900">
+<!-- Left Navigation Sidebar -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-white z-50 flex flex-col justify-between border-r border-slate-200/80 shadow-[1px_0_10px_rgba(0,0,0,0.03)]">
+<div class="flex flex-col">
+<div class="h-16 px-space-lg flex items-center gap-space-sm bg-white border-b border-slate-200/80">
+
+<span class="font-label-mono text-label-mono uppercase tracking-wider text-slate-500 font-semibold">사출생산 대시보드</span>
+</div>
+<div class="px-space-md py-space-sm">
+<div class="px-space-sm py-space-xs font-label-mono-xs text-label-mono-xs text-slate-400 uppercase tracking-wider font-semibold">CONTROL MODULES</div>
+</div>
+<nav class="flex flex-col gap-space-xs px-space-md">
+<a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm rounded transition-all bg-sky-600 text-white font-medium shadow-sm shadow-sky-500/20" data-path="production-progress" href="#">
+<span class="material-symbols-outlined text-[18px]">bar_chart</span>
+<span class="font-body-md text-body-md font-semibold">생산 진행률</span>
+</a>
+</nav>
+</div>
+</aside>
+<!-- Main Container -->
+<div class="pl-64">
+<!-- Top Header -->
+<header class="fixed top-0 left-64 right-0 z-40 bg-white/95 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_1px_8px_rgba(0,0,0,0.03)]">
+<div class="h-16 w-full px-space-lg flex items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-lg">
+<div class="flex items-center gap-space-md">
+
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-slate-900 leading-tight font-bold">사출생산 대시보드</span>
+
+</div>
+</div>
+</div>
+<!-- Right side empty as requested -->
+<div class="flex items-center gap-space-lg"></div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="w-full pt-16 bg-[#f8fafc] min-h-screen">
+<div class="flex flex-col w-full">
+<div class="p-space-lg flex flex-col gap-space-lg w-full max-w-[1720px] mx-auto">
+<!-- Top Command Ribbon / Selected Equipment Detailed Status Card -->
+<section class="bg-white rounded-xl p-space-lg shadow-sm border border-slate-200/80 flex flex-col gap-space-md">
+<!-- Card Header: Equipment ID & Action Controls -->
+<div class="flex flex-wrap items-center justify-between gap-space-md pb-space-sm border-b border-slate-100">
+<div class="flex items-center gap-space-md flex-wrap">
+<div class="flex items-center gap-space-sm bg-slate-50 px-space-md py-1.5 rounded-lg border border-slate-200">
+
+<span class="font-headline-md text-headline-md text-slate-900 font-bold tracking-tight" id="detail-machine-id">27호기</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-sm bg-white hover:bg-slate-50 text-slate-700 hover:text-sky-700 rounded-lg font-label-mono text-label-mono transition-all active:scale-95 shadow-sm border border-slate-200 font-medium" onclick="location.reload();" title="수동 데이터 갱신">
+<span class="material-symbols-outlined text-[18px] text-sky-600">refresh</span>
+<span class="">수동 업데이트</span>
+</button>
+</div>
+</div>
+<!-- High Density Metrics Grid for Selected Equipment -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-space-md pt-1">
+<!-- PO Number -->
+<div class="bg-slate-50/70 p-space-md rounded-lg border border-slate-200/80 flex flex-col justify-between">
+<span class="text-slate-500 uppercase font-label-mono-xs text-label-mono-xs flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px] text-sky-600">tag</span> PO 번호
+</span>
+<span class="font-label-mono text-lg font-bold text-sky-700 tracking-wide mt-1" id="detail-po">12345678</span>
+</div>
+<!-- Item Name -->
+<div class="bg-slate-50/70 p-space-md rounded-lg border border-slate-200/80 flex flex-col justify-between col-span-1 md:col-span-2 lg:col-span-1">
+<span class="text-slate-500 uppercase font-label-mono-xs text-label-mono-xs flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px] text-slate-400">category</span> 아이템명
+</span>
+<span class="font-label-mono text-lg font-semibold text-slate-800 truncate mt-1" id="detail-item" title="53398-0300">53398-0300</span>
+</div>
+<!-- Target Plan Qty -->
+<div class="bg-slate-50/70 p-space-md rounded-lg border border-slate-200/80 flex flex-col justify-between">
+<span class="text-slate-500 uppercase font-label-mono-xs text-label-mono-xs flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px] text-slate-400">fact_check</span> 계획수량
+</span>
+<span class="font-label-mono text-lg font-medium text-slate-800 mt-1" id="detail-plan">100,000 EA</span>
+</div>
+<!-- Printed Label Qty -->
+<div class="bg-slate-50/70 p-space-md rounded-lg border border-slate-200/80 flex flex-col justify-between">
+<span class="text-slate-500 uppercase font-label-mono-xs text-label-mono-xs flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px] text-emerald-600">print</span> 라벨 출력수량
+</span>
+<span class="font-label-mono text-lg font-bold text-emerald-600 mt-1" id="detail-printed">76,800 EA</span>
+</div>
+<!-- Realtime Progress Gauge -->
+<div class="bg-slate-50/70 p-space-md rounded-lg border border-slate-200/80 flex flex-col justify-between col-span-2 md:col-span-3 lg:col-span-1">
+<div class="flex items-center justify-between">
+<span class="text-slate-500 uppercase font-label-mono-xs text-label-mono-xs flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px] text-sky-600">donut_large</span> 진행률
+</span>
+<span class="font-label-mono text-base font-bold text-sky-700" id="detail-rate-num">76.8%</span>
+</div>
+<div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden p-0.5 mt-2">
+<div class="bg-sky-600 h-full rounded-full transition-all duration-500 ease-out" id="detail-progress-bar" style="width: 76.8%"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Section: Real-time Label History & Production Table -->
+<section class="bg-white rounded-xl p-space-lg shadow-sm border border-slate-200/80 flex flex-col gap-space-md">
+<!-- Queue Header & Filter Operations Bar -->
+<div class="flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-sky-600 text-[22px]">label_important</span>
+<h2 class="font-headline-lg text-headline-lg text-slate-900 font-semibold">생산 진행률</h2>
+</div>
+<div class="flex items-center gap-space-xs bg-slate-100 px-space-sm py-1 rounded border border-slate-200">
+<span class="font-label-mono text-label-mono text-slate-700 font-medium">총 4건 기록</span>
+<span class="text-slate-400 text-label-mono-xs">1-4 of 4 항목</span>
+</div>
+</div>
+<!-- Filter & Search Controls -->
+<div class="flex items-center gap-space-sm flex-wrap">
+<div class="flex items-center bg-slate-50 hover:bg-slate-100/80 rounded-lg px-space-sm py-1 gap-space-xs border border-slate-200 transition-colors">
+<span class="material-symbols-outlined text-slate-400 text-[18px]">search</span>
+<input class="bg-transparent border-none text-slate-800 font-label-mono text-label-mono-xs focus:outline-none placeholder:text-slate-400 w-44" placeholder="PO 또는 품목 검색..." type="text">
+</div>
+<button class="flex items-center gap-1 px-space-sm py-1 bg-white hover:bg-slate-50 rounded-lg text-slate-700 font-label-mono text-label-mono-xs transition-colors border border-slate-200 shadow-sm" onclick="alert('CSV 내역 다운로드 생성 중...');">
+<span class="material-symbols-outlined text-[16px] text-slate-500">download</span>
+<span class="">CSV 추출</span>
+</button>
+</div>
+</div>
+<!-- Dense Industrial Data Table -->
+<div class="w-full overflow-x-auto rounded-lg bg-white border border-slate-200">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 text-slate-500 uppercase font-label-mono text-label-mono-xs tracking-wider border-b border-slate-200 font-semibold">
+<th class="py-space-sm px-space-md">설비명</th>
+<th class="py-space-sm px-space-md">PO</th>
+<th class="py-space-sm px-space-md">아이템명</th>
+<th class="py-space-sm px-space-md text-right">계획수량</th>
+<th class="py-space-sm px-space-md text-right">라벨 출력수량</th>
+<th class="py-space-sm px-space-md text-center">진행률</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 font-label-mono text-label-mono" id="machine-table-body">
+<!-- Row 1 (Default Active) -->
+<tr class="machine-row cursor-pointer transition-colors bg-sky-50/80 border-l-4 border-l-sky-600 group" data-item="53398-0300" data-machine="27호기" data-plan="100,000 EA" data-po="12345678" data-printed="76,800 EA" data-rate="76.8%">
+<td class="py-space-sm px-space-md font-semibold text-slate-900 flex items-center gap-space-xs">
+
+<span class="">27호기</span>
+</td>
+<td class="py-space-sm px-space-md text-sky-700 font-bold">12345678</td>
+<td class="py-space-sm px-space-md text-slate-700 truncate max-w-[280px]">53398-0300</td>
+<td class="py-space-sm px-space-md text-right text-slate-500">100,000 EA</td>
+<td class="py-space-sm px-space-md text-right font-bold text-emerald-600">76,800 EA</td>
+<td class="py-space-sm px-space-md text-center">
+<div class="flex items-center justify-center gap-space-sm">
+<div class="w-24 bg-slate-200 h-2 rounded-full overflow-hidden p-0.5">
+<div class="bg-sky-600 h-full rounded-full" style="width: 76.8%"></div>
+</div>
+<span class="font-bold text-sky-700 text-label-mono-xs">76.8%</span>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="machine-row cursor-pointer transition-colors bg-white hover:bg-slate-50 border-l-4 border-l-transparent group" data-item="501330-0400" data-machine="64호기" data-plan="80,000 EA" data-po="12345679" data-printed="61,120 EA" data-rate="76.4%">
+<td class="py-space-sm px-space-md font-semibold text-slate-900 flex items-center gap-space-xs">
+
+<span class="">64호기</span>
+</td>
+<td class="py-space-sm px-space-md text-sky-700 font-bold">12345679</td>
+<td class="py-space-sm px-space-md text-slate-700 truncate max-w-[280px]">501330-0400</td>
+<td class="py-space-sm px-space-md text-right text-slate-500">80,000 EA</td>
+<td class="py-space-sm px-space-md text-right font-bold text-slate-800">61,120 EA</td>
+<td class="py-space-sm px-space-md text-center">
+<div class="flex items-center justify-center gap-space-sm">
+<div class="w-24 bg-slate-200 h-2 rounded-full overflow-hidden p-0.5">
+<div class="bg-sky-600 h-full rounded-full" style="width: 76.4%"></div>
+</div>
+<span class="font-bold text-sky-700 text-label-mono-xs">76.4%</span>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="machine-row cursor-pointer transition-colors bg-slate-50/50 hover:bg-slate-50 border-l-4 border-l-transparent group" data-item="53261-0571" data-machine="118호기" data-plan="120,000 EA" data-po="12345680" data-printed="91,200 EA" data-rate="76.0%">
+<td class="py-space-sm px-space-md font-semibold text-slate-900 flex items-center gap-space-xs">
+
+<span class="">118호기</span>
+</td>
+<td class="py-space-sm px-space-md text-sky-700 font-bold">12345680</td>
+<td class="py-space-sm px-space-md text-slate-700 truncate max-w-[280px]">53261-0571</td>
+<td class="py-space-sm px-space-md text-right text-slate-500">120,000 EA</td>
+<td class="py-space-sm px-space-md text-right font-bold text-slate-800">91,200 EA</td>
+<td class="py-space-sm px-space-md text-center">
+<div class="flex items-center justify-center gap-space-sm">
+<div class="w-24 bg-slate-200 h-2 rounded-full overflow-hidden p-0.5">
+<div class="bg-sky-600 h-full rounded-full" style="width: 76.0%"></div>
+</div>
+<span class="font-bold text-sky-700 text-label-mono-xs">76.0%</span>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="machine-row cursor-pointer transition-colors bg-white hover:bg-slate-50 border-l-4 border-l-transparent group" data-item="502352-0600" data-machine="175호기" data-plan="90,000 EA" data-po="12345681" data-printed="67,680 EA" data-rate="75.2%">
+<td class="py-space-sm px-space-md font-semibold text-slate-900 flex items-center gap-space-xs">
+
+<span class="">175호기</span>
+</td>
+<td class="py-space-sm px-space-md text-sky-700 font-bold">12345681</td>
+<td class="py-space-sm px-space-md text-slate-700 truncate max-w-[280px]">502352-0600</td>
+<td class="py-space-sm px-space-md text-right text-slate-500">90,000 EA</td>
+<td class="py-space-sm px-space-md text-right font-bold text-amber-700">67,680 EA</td>
+<td class="py-space-sm px-space-md text-center">
+<div class="flex items-center justify-center gap-space-sm">
+<div class="w-24 bg-slate-200 h-2 rounded-full overflow-hidden p-0.5">
+<div class="bg-sky-600 h-full rounded-full" style="width: 75.2%"></div>
+</div>
+<span class="font-bold text-sky-700 text-label-mono-xs">75.2%</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Quick Operational Stat Rails & Pagination -->
+<div class="flex flex-wrap items-center justify-between gap-space-md pt-space-xs text-slate-500">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-mono-xs text-label-mono-xs text-slate-400">1-4 of 4 항목</span>
+<div class="flex items-center bg-slate-100 rounded p-0.5 border border-slate-200">
+<button class="p-1 rounded text-slate-400 hover:text-slate-700 disabled:opacity-30" disabled="" title="이전 페이지">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+</button>
+<button class="p-1 rounded text-slate-700 hover:text-sky-700" title="다음 페이지">
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const rows = document.querySelectorAll('.machine-row');
+      const detailMachineId = document.getElementById('detail-machine-id');
+      const detailPo = document.getElementById('detail-po');
+      const detailItem = document.getElementById('detail-item');
+      const detailPlan = document.getElementById('detail-plan');
+      const detailPrinted = document.getElementById('detail-printed');
+      const detailRateNum = document.getElementById('detail-rate-num');
+      const detailProgressBar = document.getElementById('detail-progress-bar');
+
+      rows.forEach(row => {
+        row.addEventListener('click', () => {
+          // Remove active styles from all rows
+          rows.forEach((r, idx) => {
+            r.classList.remove('bg-sky-50/80', 'border-l-sky-600');
+            r.classList.add('border-l-transparent');
+            if (idx % 2 === 0) {
+              r.classList.add('bg-white');
+              r.classList.remove('bg-slate-50/50');
+            } else {
+              r.classList.add('bg-slate-50/50');
+              r.classList.remove('bg-white');
+            }
+          });
+
+          // Set active state for clicked row
+          row.classList.remove('bg-white', 'bg-slate-50/50', 'border-l-transparent');
+          row.classList.add('bg-sky-50/80', 'border-l-sky-600');
+
+          // Smoothly update details in the top card
+          const { machine, po, item, plan, printed, rate } = row.dataset;
+          if (detailMachineId) detailMachineId.textContent = machine;
+          if (detailPo) detailPo.textContent = po;
+          if (detailItem) {
+            detailItem.textContent = item;
+            detailItem.setAttribute('title', item);
+          }
+          if (detailPlan) detailPlan.textContent = plan;
+          if (detailPrinted) detailPrinted.textContent = printed;
+          if (detailRateNum) detailRateNum.textContent = rate;
+          if (detailProgressBar) detailProgressBar.style.width = rate;
+        });
+      });
+    });
+  </script>
+
+
+</body></html>
